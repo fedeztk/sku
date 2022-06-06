@@ -17,7 +17,7 @@ jobs:
       - name: Publish to the AUR
         uses: KSXGitHub/github-actions-deploy-aur@v2.2.5
         with:
-          pkgname: go-translation-git
+          pkgname: sku-git
           pkgbuild: ./template/archlinux/PKGBUILD
           commit_username: ${{ secrets.AUR_USERNAME }}
           commit_email: ${{ secrets.AUR_EMAIL }}

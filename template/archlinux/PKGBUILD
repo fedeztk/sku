@@ -2,7 +2,7 @@
 
 pkgname=sku-git
 _name=sku
-pkgver=r3.b5efce4
+pkgver=r4.f16efa6
 pkgrel=1
 pkgdesc="Simple TUI sudoku written in go"
 arch=('any')
