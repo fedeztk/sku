@@ -57,9 +57,9 @@ For more information about version and modes check the help (`sku -h`)
 	- when the last cell is filled, `sku` will perform a check of the sudoku:
 		- if it is correct, an animation will let you know that you won the game
 		
-https://user-images.githubusercontent.com/58485208/172200661-78ce055f-b5b9-44aa-bf4d-a27e9f8fce85.mp4
+		https://user-images.githubusercontent.com/58485208/172200661-78ce055f-b5b9-44aa-bf4d-a27e9f8fce85.mp4
 
-    - otherwise it will color with red the errors 
+		- otherwise it will color with red the errors 
    ![Screenshot from 2022-06-06 17-36-56](https://user-images.githubusercontent.com/58485208/172201574-e1ebe9ec-fc44-4d6c-a80a-287c8433133d.png)
 
 
