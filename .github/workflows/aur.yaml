@@ -1,0 +1,24 @@
+name: Publish package to AUR
+
+on:
+  workflow_run:
+    workflows: ["Update package version"]
+    branches: ["master"]
+    types: ["completed"]
+
+jobs:
+  publish-to-aur:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Publish to the AUR
+        uses: KSXGitHub/github-actions-deploy-aur@v2.2.5
+        with:
+          pkgname: go-translation-git
+          pkgbuild: ./template/archlinux/PKGBUILD
+          commit_username: ${{ secrets.AUR_USERNAME }}
+          commit_email: ${{ secrets.AUR_EMAIL }}
+          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
