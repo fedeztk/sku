@@ -1,7 +1,6 @@
 package sudoku
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 )
@@ -10,7 +9,7 @@ const (
 	EASY   = 45
 	MEDIUM = 36
 	HARD   = 27
-	EXPERT = 13
+	// EXPERT = 13
 )
 
 type Sudoku struct {
@@ -28,83 +27,71 @@ func New(difficulty int) *Sudoku {
 }
 
 func (s *Sudoku) eraseSome(difficulty int) {
-	erased := 0
 	const SUDOKU_SIZE = 81
-	for SUDOKU_SIZE-erased > difficulty {
-		row, col := 0, 0
-		for s.Puzzle[row*9+col] == 0 {
+	for erased := 0; SUDOKU_SIZE-erased > difficulty; {
+		idx := 0
+		for s.Puzzle[idx] == 0 {
 			rand.Seed(time.Now().UnixNano())
-			row, col = rand.Intn(9), rand.Intn(9)
+			idx = rand.Intn(SUDOKU_SIZE)
 		}
 
-		backup := s.Puzzle[row*9+col]
-		s.Puzzle[row*9+col] = 0
-
 		copyGrid := s.Puzzle
+		copyGrid[idx] = 0
 
 		count := 0
 		solve(&copyGrid, &count)
-		if count != 1 {
-			s.Puzzle[row*9+col] = backup
-		} else {
+		if count == 1 {
+			s.Puzzle[idx] = 0
 			erased++
 		}
 	}
 }
 
-func solve(grid *[81]int, count *int) bool {
-	var row, col int
-	for i := 0; i < 81; i++ {
-		row = i / 9
-		col = i % 9
-		if grid[row*9+col] == 0 {
+func solve(grid *[81]int, count *int) {
+	if *count > 1 { // no need to go further
+		return
+	}
+
+	var idx int
+	for idx = 0; idx < 81; idx++ {
+		if grid[idx] == 0 {
 			for n := 1; n <= 9; n++ {
-				if isValid(grid, row, col, n) {
-					grid[row*9+col] = n
+				if isValid(grid, idx, n) {
+					grid[idx] = n
 					if checkFull(grid) {
 						*count++
-						break
-					} else {
-						if solve(grid, count) {
-							return true
-						}
 					}
+					solve(grid, count)
+					grid[idx] = 0
 				}
 			}
 			break
 		}
 	}
-	grid[row*9+col] = 0
-	return false
 }
 
 func fill(grid *[81]int) bool {
 	numberList := [9]int{1, 2, 3, 4, 5, 6, 7, 8, 9}
-	var row, col int
-	for i := 0; i < 81; i++ {
-		row = i / 9
-		col = i % 9
-		if grid[row*9+col] == 0 {
+	var idx int
+	for idx = 0; idx < 81; idx++ {
+		if grid[idx] == 0 {
 			rand.Seed(time.Now().UnixNano())
 			rand.Shuffle(len(numberList), func(i, j int) {
 				numberList[i], numberList[j] = numberList[j], numberList[i]
 			})
+
 			for _, n := range numberList {
-				if isValid(grid, row, col, n) {
-					grid[row*9+col] = n
-					if checkFull(grid) {
+				if isValid(grid, idx, n) {
+					grid[idx] = n
+					if checkFull(grid) || fill(grid) {
 						return true
-					} else {
-						if fill(grid) {
-							return true
-						}
 					}
+					grid[idx] = 0
 				}
 			}
 			break
 		}
 	}
-	grid[row*9+col] = 0
 	return false
 }
 
@@ -117,40 +104,16 @@ func checkFull(grid *[81]int) bool {
 	return true
 }
 
-func isValid(grid *[81]int, row, col, n int) bool {
+func isValid(grid *[81]int, idx, n int) bool {
+	// check if num is valid in row, col, and 3x3 box
+	row := idx / 9
+	col := idx % 9
 	for i := 0; i < 9; i++ {
-		if grid[row*9+i] == n || grid[i*9+col] == n {
+		if grid[row*9+i] == n ||
+			grid[i*9+col] == n ||
+			grid[((row/3)*3+i/3)*9+((col/3)*3+i%3)] == n {
 			return false
 		}
 	}
-	// check numbers on the same 3x3 block
-	for i := 0; i < 3; i++ {
-		for j := 0; j < 3; j++ {
-			if grid[(row/3*3+i)*9+(col/3*3+j)] == n {
-				return false
-			}
-		}
-	}
 	return true
-}
-
-func printSudoku(s *Sudoku) {
-	for i := 0; i < 81; i = i + 9 {
-		fmt.Println(s.Puzzle[i : i+9])
-	}
-	fmt.Println()
-	for i := 0; i < 81; i = i + 9 {
-		fmt.Println(s.Answer[i : i+9])
-	}
-	erased := 0
-	for i := 0; i < 81; i++ {
-		if s.Puzzle[i] == 0 {
-			fmt.Printf(".")
-			erased++
-		} else {
-			fmt.Printf("%d", s.Puzzle[i])
-		}
-	}
-	fmt.Println()
-	fmt.Println(erased)
 }
