@@ -6,13 +6,13 @@ import (
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/fedeztk/sku/internal/model/components/keys"
-	sudoku_generator "github.com/forfuns/sudoku-go/generator"
+	"github.com/fedeztk/sku/pkg/sudoku"
 )
 
 type Model struct {
 	board [sudoku_len][sudoku_len]struct {
-		puzzle     int8
-		answer     int8
+		puzzle     int
+		answer     int
 		modifiable bool
 	}
 	KeyMap         keys.KeyMap
@@ -41,19 +41,19 @@ const (
 func NewModel(mode int) Model {
 	var cellsLeft int
 	var board [sudoku_len][sudoku_len]struct {
-		puzzle     int8
-		answer     int8
+		puzzle     int
+		answer     int
 		modifiable bool
 	}
 
-	game, _ := sudoku_generator.Generate(mode)
-	puzzle, answer := game.Puzzle(), game.Answer()
+	sudoku := sudoku.New(mode)
+	puzzle, answer := sudoku.Puzzle, sudoku.Answer
 
 	for i := 0; i < sudoku_len; i++ {
 		for j := 0; j < sudoku_len; j++ {
 			board[i][j].puzzle = puzzle[i*sudoku_len+j]
 			board[i][j].answer = answer[i*sudoku_len+j]
-			if modifiable := puzzle[i*sudoku_len+j] == -1; modifiable {
+			if modifiable := puzzle[i*sudoku_len+j] == 0; modifiable {
 				board[i][j].modifiable = modifiable
 				cellsLeft++
 			}
@@ -83,7 +83,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		case key.Matches(msg, m.KeyMap.Clear):
 			m.clear(m.cursor.row, m.cursor.col)
 		case key.Matches(msg, m.KeyMap.Number):
-			return m, m.set(m.cursor.row, m.cursor.col, int8(msg.String()[0]-'0'))
+			return m, m.set(m.cursor.row, m.cursor.col, int(msg.String()[0]-'0'))
 		}
 	case gameCheck:
 		m.Err = msg.Err
@@ -100,9 +100,9 @@ func (m Model) Init() tea.Cmd {
 }
 
 func (m Model) View() string {
-	// replace -1 with empty string
-	var maybeReplace = func(v int8) string {
-		if v == -1 {
+	// replace 0 with empty string
+	var maybeReplace = func(v int) string {
+		if v == 0 {
 			return " "
 		}
 		return fmt.Sprintf("%d", v)
@@ -123,9 +123,9 @@ func (m Model) View() string {
 	return boardView + cellsLeftStyle.Render(fmt.Sprintf("Cells left: %d", m.cellsLeft))
 }
 
-func (m *Model) set(row, col int, v int8) tea.Cmd {
+func (m *Model) set(row, col int, v int) tea.Cmd {
 	if m.board[row][col].modifiable {
-		if m.board[row][col].puzzle == -1 {
+		if m.board[row][col].puzzle == 0 {
 			m.cellsLeft--
 		}
 		m.board[row][col].puzzle = v
@@ -141,10 +141,10 @@ func (m *Model) set(row, col int, v int8) tea.Cmd {
 
 func (m *Model) clear(row, col int) {
 	if m.board[row][col].modifiable {
-		if m.board[row][col].puzzle != -1 {
+		if m.board[row][col].puzzle != 0 {
 			m.cellsLeft++
 		}
-		m.board[row][col].puzzle = -1
+		m.board[row][col].puzzle = 0
 
 		delete(m.errCoordinates, coordinate{row, col})
 	}

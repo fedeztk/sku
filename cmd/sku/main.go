@@ -7,6 +7,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	model "github.com/fedeztk/sku/internal/model"
+	"github.com/fedeztk/sku/pkg/sudoku"
 )
 
 const (
@@ -23,14 +24,14 @@ var skuVersion string
 func main() {
 	var mode int
 	modesMap := map[string]int{
-		"easy":   LEVEL_EASY,
-		"medium": LEVEL_MEDIUM,
-		"hard":   LEVEL_HARD,
-		"expert": LEVEL_EXPERT,
+		"easy":   sudoku.EASY,
+		"medium": sudoku.MEDIUM,
+		"hard":   sudoku.HARD,
+		"expert": sudoku.EXPERT,
 	}
 
 	if len(os.Args) < 2 {
-		mode = LEVEL_EASY
+		mode = sudoku.EASY
 	} else {
 		if os.Args[1] == "-v" || os.Args[1] == "--version" {
 			fmt.Println(skuVersion)
