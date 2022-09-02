@@ -14,11 +14,8 @@ If you need a super efficient implementation this package is not the right one s
 
 ## Usage
 ```go
-sudoku := sudoku.New(sudoku.EASY) // also available: MEDIUM, HARD
+sudoku := sudoku.New(sudoku.EASY) // also available: MEDIUM, HARD, EXPERT
 
 fmt.Println(sudoku.Puzzle) // unsolved sudoku [81]int
 fmt.Println(sudoku.Answer) // solved sudoku   [81]int
 ```
-
-## Bugs
-- EXPERT mode do not finish the `solve()`, probably due to bad/inefficient implementation; hence it is not available at the moment

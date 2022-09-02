@@ -12,7 +12,7 @@ func TestSudoku(t *testing.T) {
 		EASY:   "easy",
 		MEDIUM: "medium",
 		HARD:   "hard",
-		// EXPERT: "expert",
+		EXPERT: "expert",
 	}
 
 	for d, mode := range modes {

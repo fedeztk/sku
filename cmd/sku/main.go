@@ -27,7 +27,7 @@ func main() {
 		"easy":   sudoku.EASY,
 		"medium": sudoku.MEDIUM,
 		"hard":   sudoku.HARD,
-		// "expert": sudoku.EXPERT
+		"expert": sudoku.EXPERT,
 	}
 
 	if len(os.Args) < 2 {
@@ -63,5 +63,5 @@ func getHelp() string {
 	return `sku - a simple sudoku game
     -v, --version    show version
     -h, --help       show this help
-    [mode]           easy, medium, hard` //, expert
+    [mode]           easy, medium, hard, expert`
 }

@@ -9,7 +9,7 @@ Simple TUI written in go to play sudoku in the terminal
 [Features](#org26baa6c) -
 [Testing](#org2744438)
 
-sku is a simple TUI for playing sudoku inside the terminal. It uses the awesome [bubbletea](https://github.com/charmbracelet/bubbletea) TUI library for the UI and the [sudoku-go](https://github.com/forfuns/sudoku-go) library as the sudoku logic backend.
+sku is a simple TUI for playing sudoku inside the terminal. It uses the awesome [bubbletea](https://github.com/charmbracelet/bubbletea) TUI library for the UI.
 
 Screenshots [here](#org26baa6c)
 
