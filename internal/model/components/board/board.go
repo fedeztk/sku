@@ -35,7 +35,7 @@ type coordinate struct {
 }
 
 const (
-	sudoku_len = 9
+	sudoku_len = sudoku.SUDOKU_LENGTH
 )
 
 func NewModel(mode int) Model {
@@ -53,8 +53,8 @@ func NewModel(mode int) Model {
 		for j := 0; j < sudoku_len; j++ {
 			board[i][j].puzzle = puzzle[i*sudoku_len+j]
 			board[i][j].answer = answer[i*sudoku_len+j]
-			if modifiable := puzzle[i*sudoku_len+j] == 0; modifiable {
-				board[i][j].modifiable = modifiable
+			board[i][j].modifiable = puzzle[i*sudoku_len+j] == 0
+			if board[i][j].modifiable {
 				cellsLeft++
 			}
 		}

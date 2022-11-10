@@ -22,6 +22,12 @@ func TestSudoku(t *testing.T) {
 	}
 }
 
+func BenchmarkSudoku(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		New(EXPERT)
+	}
+}
+
 func printSudoku(s *Sudoku) string {
 	board := "\n"
 	for i := 0; i < 81; i = i + 9 {
